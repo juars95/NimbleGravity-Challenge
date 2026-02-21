@@ -9,7 +9,7 @@ const BASE_URL = "https://botfilter-h5ddh6dye8exb7ha.centralus-01.azurewebsites.
 
 function App() {
   const [email, setEmail] = useState('');
-  const[candidate,, setCandidate] = useState(null);
+  const[candidate, setCandidate] = useState(null);
   const [jobs, setJobs] = useState([]);
 
   //vista principal
@@ -30,7 +30,7 @@ function App() {
       setCandidate(candidateData);
 
       //Step 3 
-      const jobsRes = await fetch(`$BASE_URL}/api/job/get-all`);
+      const jobsRes = await fetch(`${BASE_URL}/api/jobs/get-list`);
       const jobsData = await jobsRes.json().catch(() => ({}));
 
       if (!jobsRes.ok){
