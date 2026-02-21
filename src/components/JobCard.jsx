@@ -77,7 +77,7 @@ export default function JobCard({job, candidate}){
 }
 //dejo puesto algunos estilos en css para que quede mas decente sin agregar librerias extras
 const styles = {
-  card: { border: '1px solid #ddd', borderRadius: '8px', padding: '16px', marginBottom: '16px', backgroundColor: '#fff' },
+  card: { border: '1px solid #ddd', borderRadius: '8px', padding: '16px', marginBottom: '16px', backgroundColor: '#fff',color: '#333' },
   jobId: { fontSize: '0.85rem', color: '#666' },
   form: { display: 'flex', gap: '8px', marginTop: '12px' },
   input: { flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid #ccc' },
