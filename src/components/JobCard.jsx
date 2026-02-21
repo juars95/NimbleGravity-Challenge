@@ -26,7 +26,7 @@ export default function JobCard({job, candidate}){
                 body: JSON.stringify({
                     uuid: candidate.uuid,
                     jobId: job.id,
-                    candidateId: candidate.CandidateId,
+                    candidateId: candidate.candidateId,
                     applicationId: candidate.applicationId,
                     repoUrl: repoUrl
                 })
