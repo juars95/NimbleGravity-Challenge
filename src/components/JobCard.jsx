@@ -43,6 +43,7 @@ export default function JobCard({ job, candidate }) {
             handleSubmit(e, {
               uuid: candidate.uuid,
               jobId: job.id,
+              applicationId: job.id,
               candidateId: candidate.candidateId,
             })
           }

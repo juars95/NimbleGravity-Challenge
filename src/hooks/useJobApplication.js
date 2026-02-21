@@ -11,7 +11,7 @@ export function useJobApplication() {
   const [message, setMessage] = useState("");
 
   const handleSubmit = useCallback(
-    async (e, { uuid, jobId, candidateId }) => {
+    async (e, { uuid, jobId, applicationId, candidateId }) => {
       e.preventDefault();
 
       if (!repoUrl.includes("github.com")) {
@@ -24,7 +24,7 @@ export function useJobApplication() {
       setMessage("");
 
       try {
-        await applyToJob({ uuid, jobId, candidateId, repoUrl });
+        await applyToJob({ uuid, jobId, applicationId, candidateId, repoUrl });
         setStatus("exitoso");
         setMessage("Postulación enviada correctamente");
       } catch (err) {

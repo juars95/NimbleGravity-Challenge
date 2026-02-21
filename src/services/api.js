@@ -34,15 +34,16 @@ export async function getJobsList() {
  * @param {Object} params
  * @param {string} params.uuid
  * @param {string} params.jobId
+ * @param {string} params.applicationId
  * @param {string} params.candidateId
  * @param {string} params.repoUrl
  * @returns {Promise<Object>}
  */
-export async function applyToJob({ uuid, jobId, candidateId, repoUrl }) {
+export async function applyToJob({ uuid, jobId, applicationId, candidateId, repoUrl }) {
   const res = await fetch(`${BASE_URL}/api/candidate/apply-to-job`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ uuid, jobId, candidateId, repoUrl }),
+    body: JSON.stringify({ uuid, jobId, applicationId, candidateId, repoUrl }),
   });
   const data = await res.json();
   if (!res.ok) {
