@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { getCandidateByEmail, getJobsList } from "../services/api";
+import { useToast } from "../context/ToastContext";
 
 /**
  * Hook que encapsula la lógica de obtener los datos del candidato
@@ -9,11 +10,10 @@ export function useCandidateData() {
   const [candidate, setCandidate] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { addToast } = useToast();
 
   const fetchData = useCallback(async (email) => {
     setLoading(true);
-    setError("");
     try {
       const [candidateData, jobsData] = await Promise.all([
         getCandidateByEmail(email),
@@ -22,11 +22,11 @@ export function useCandidateData() {
       setCandidate(candidateData);
       setJobs(jobsData);
     } catch (err) {
-      setError(err.message);
+      addToast(err.message || "Error al obtener perfil", "error");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [addToast]);
 
-  return { candidate, jobs, loading, error, fetchData };
+  return { candidate, jobs, loading, fetchData };
 }

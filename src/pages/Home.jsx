@@ -5,7 +5,7 @@ import CandidateInfo from "../components/CandidateInfo";
 import { motion } from "motion/react";
 
 export default function Home() {
-  const { candidate, loading, error, fetchData } = useCandidateContext();
+  const { candidate, loading, fetchData } = useCandidateContext();
 
   return (
     <motion.div
@@ -22,7 +22,7 @@ export default function Home() {
       </p>
 
       {!candidate ? (
-        <EmailForm onSubmit={fetchData} loading={loading} error={error} />
+        <EmailForm onSubmit={fetchData} loading={loading} />
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "2rem", alignItems: "center" }}>
           <CandidateInfo candidate={candidate} />

@@ -3,7 +3,7 @@ import { useJobApplication } from "../hooks/useJobApplication";
 import { Briefcase, Link as LinkIcon, CheckCircle, AlertCircle } from "lucide-react";
 
 export default function JobCard({ job, candidate }) {
-  const { repoUrl, setRepoUrl, status, message, handleSubmit } =
+  const { repoUrl, setRepoUrl, status, handleSubmit } =
     useJobApplication();
 
   const itemVariants = {
@@ -35,7 +35,7 @@ export default function JobCard({ job, candidate }) {
           animate={{ opacity: 1, scale: 1 }}
         >
           <CheckCircle size={18} />
-          <span>{message}</span>
+          <span>Postulación completada.</span>
         </motion.div>
       ) : (
         <form
@@ -71,16 +71,7 @@ export default function JobCard({ job, candidate }) {
         </form>
       )}
 
-      {status === "error" && (
-        <motion.div 
-          style={styles.errorBox}
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <AlertCircle size={16} />
-          <span>{message}</span>
-        </motion.div>
-      )}
+
     </motion.div>
   );
 }
@@ -175,16 +166,5 @@ const styles = {
     fontSize: "0.9rem",
     fontWeight: "500",
   },
-  errorBox: {
-    backgroundColor: "rgba(239, 68, 68, 0.1)",
-    color: "#b91c1c",
-    padding: "10px 12px",
-    borderRadius: "8px",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    fontSize: "0.85rem",
-    marginTop: "12px",
-    fontWeight: "500",
-  },
+
 };

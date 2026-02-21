@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Mail, AlertCircle, ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
 
-export default function EmailForm({ onSubmit, loading, error }) {
+export default function EmailForm({ onSubmit, loading }) {
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e) => {
@@ -37,16 +37,7 @@ export default function EmailForm({ onSubmit, loading, error }) {
           />
         </div>
 
-        {error && (
-          <motion.div 
-            style={styles.errorBox}
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <AlertCircle size={16} />
-            <span>{error}</span>
-          </motion.div>
-        )}
+
 
         <button 
           type="submit" 
@@ -122,15 +113,5 @@ const styles = {
     opacity: isLoading ? 0.7 : 1,
     transition: "background-color 0.2s, transform 0.1s",
   }),
-  errorBox: {
-    backgroundColor: "rgba(239, 68, 68, 0.1)",
-    color: "#b91c1c",
-    padding: "10px 14px",
-    borderRadius: "8px",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    fontSize: "0.9rem",
-    fontWeight: "500",
-  },
+
 };
