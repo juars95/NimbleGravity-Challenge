@@ -27,7 +27,8 @@ export default function JobCard({job, candidate}){
                     uuid: candidate.uuid,
                     jobId: job.id,
                     candidateId: candidate.CandidateId,
-                    repoURL: repoUrl
+                    applicationId: candidate.applicationId,
+                    repoUrl: repoUrl
                 })
             });
             const data = await response.json().catch(() => ({}));

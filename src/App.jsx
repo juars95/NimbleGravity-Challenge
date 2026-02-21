@@ -71,7 +71,7 @@ function App() {
       {candidate && jobs.length > 0 && (
         <div>
           <div style={{ marginBottom: '24px', padding: '12px', backgroundColor: '#f0f4f8', borderRadius: '8px' }}>
-            <p style={{ margin: 0 }}>Postulando como: <strong>{candidate.firstName} {candidate.lastName}</strong></p>
+            <p style={{ margin: 0, color: '#333' }}>Postulando como: <strong>{candidate.firstName} {candidate.lastName}</strong></p>
           </div>
           
           <h3>Posiciones Disponibles</h3>
