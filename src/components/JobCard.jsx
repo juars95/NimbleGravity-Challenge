@@ -1,88 +1,189 @@
-import { useState } from "react";
+import { motion } from "motion/react";
+import { useJobApplication } from "../hooks/useJobApplication";
+import { Briefcase, Link as LinkIcon, CheckCircle, AlertCircle } from "lucide-react";
 
-const BASE_URL = "https://botfilter-h5ddh6dye8exb7ha.centralus-01.azurewebsites.net";
+export default function JobCard({ job, candidate }) {
+  const { repoUrl, setRepoUrl, status, message, handleSubmit } =
+    useJobApplication();
 
-export default function JobCard({job, candidate}){
-    const[repoUrl, setRepoUrl] = useState('');
-    const [status, setStatus] = useState('inactiva');
-    const[message, setMessage] = useState('');
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } },
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        //validacion
-        if (!repoUrl.includes('github.com')){
-            setStatus('error');
-            setMessage('URL no valida, ingrese una URL valida de GitHub');
-            return;
-        }
-        setStatus('loading');
-        setMessage('');
-        try{
-            const response = await fetch(`${BASE_URL}/api/candidate/apply-to-job`, {
-                method: 'POST',
-                headers:{
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    uuid: candidate.uuid,
-                    jobId: job.id,
-                    candidateId: candidate.candidateId,
-                    applicationId: candidate.applicationId,
-                    repoUrl: repoUrl
-                })
-            });
-            const data = await response.json().catch(() => ({}));
-            if (!response.ok){
-                throw new Error(data.message || "Error al enviar la postulacion");
-            }
-            //Exito
-            setStatus('exitoso');
-            setMessage('Postulacion enviada correctamente');
-        }catch(error){
-            setStatus('error');
-            setMessage(error.message);
-        }
-
-    };
-    return(
-        <div className="job-card" style={styles.card}>
-        <h3>{job.title}</h3>
-        <p style={styles.jobId}>ID: {job.id}</p>
-        
-        {status === 'exitoso' ? (
-            <div style={styles.successBox}>{message}</div>
-        ) : (
-            <form onSubmit={handleSubmit} style={styles.form}>
-            <input
-                type="url"
-                placeholder="https://github.com/juars95/NimbleGravity-Challenge.git"
-                value={repoUrl}
-                onChange={(e) => setRepoUrl(e.target.value)}
-                disabled={status === 'loading'}
-                style={styles.input}
-                required
-            />
-            <button 
-                type="submit" 
-                disabled={status === 'loading' || !repoUrl}
-                style={styles.button}
-            >
-                {status === 'loading' ? 'Enviando...' : 'Submit'}
-            </button>
-            </form>
-        )}
-        {status === 'error' && <p style={styles.errorText}>{message}</p>}
+  return (
+    <motion.div
+      className="job-card"
+      style={styles.card}
+      variants={itemVariants}
+      whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" }}
+    >
+      <div style={styles.header}>
+        <div style={styles.iconWrapper}>
+          <Briefcase size={20} color="var(--brand-primary)" />
         </div>
-    );
+        <div>
+          <h3 style={styles.title}>{job.title}</h3>
+          <p style={styles.jobId}>Req ID: {job.id}</p>
+        </div>
+      </div>
 
+      {status === "exitoso" ? (
+        <motion.div 
+          style={styles.successBox}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <CheckCircle size={18} />
+          <span>{message}</span>
+        </motion.div>
+      ) : (
+        <form
+          onSubmit={(e) =>
+            handleSubmit(e, {
+              uuid: candidate.uuid,
+              jobId: job.id,
+              candidateId: candidate.candidateId,
+            })
+          }
+          style={styles.formContainer}
+        >
+          <div style={styles.inputWrapper}>
+            <LinkIcon size={16} style={styles.inputIcon} />
+            <input
+              type="url"
+              placeholder="github.com/usuario/repo"
+              value={repoUrl}
+              onChange={(e) => setRepoUrl(e.target.value)}
+              disabled={status === "loading"}
+              style={styles.input}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={status === "loading" || !repoUrl}
+            style={styles.button(status === "loading")}
+          >
+            {status === "loading" ? "Enviando..." : "Postularme"}
+          </button>
+        </form>
+      )}
+
+      {status === "error" && (
+        <motion.div 
+          style={styles.errorBox}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <AlertCircle size={16} />
+          <span>{message}</span>
+        </motion.div>
+      )}
+    </motion.div>
+  );
 }
-//dejo puesto algunos estilos en css para que quede mas decente sin agregar librerias extras
+
 const styles = {
-  card: { border: '1px solid #ddd', borderRadius: '8px', padding: '16px', marginBottom: '16px', backgroundColor: '#fff',color: '#333' },
-  jobId: { fontSize: '0.85rem', color: '#666' },
-  form: { display: 'flex', gap: '8px', marginTop: '12px' },
-  input: { flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid #ccc' },
-  button: { padding: '8px 16px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' },
-  errorText: { color: 'red', fontSize: '0.9rem', marginTop: '8px' },
-  successBox: { backgroundColor: '#d4edda', color: '#155724', padding: '12px', borderRadius: '4px', marginTop: '12px' }
+  card: {
+    backgroundColor: "var(--text-light)",
+    border: "1px solid var(--bg-secondary)",
+    borderRadius: "12px",
+    padding: "1.5rem",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
+    transition: "border-color 0.2s",
+    willChange: "transform",
+  },
+  header: {
+    display: "flex",
+    alignItems: "flex-start",
+    gap: "1rem",
+    marginBottom: "1.5rem",
+  },
+  iconWrapper: {
+    backgroundColor: "var(--bg-secondary)",
+    padding: "10px",
+    borderRadius: "10px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  title: {
+    margin: "0 0 4px 0",
+    fontSize: "1.1rem",
+    fontWeight: "600",
+    color: "var(--text-main)",
+  },
+  jobId: {
+    margin: 0,
+    fontSize: "0.8rem",
+    color: "var(--text-muted)",
+    fontWeight: "500",
+  },
+  formContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+    marginTop: "auto",
+  },
+  inputWrapper: {
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+  },
+  inputIcon: {
+    position: "absolute",
+    left: "12px",
+    color: "var(--text-muted)",
+  },
+  input: {
+    width: "100%",
+    padding: "10px 10px 10px 38px",
+    borderRadius: "8px",
+    border: "1px solid var(--bg-secondary)",
+    fontSize: "0.9rem",
+    backgroundColor: "var(--bg-primary)",
+    transition: "border-color 0.2s, box-shadow 0.2s",
+  },
+  button: (isLoading) => ({
+    width: "100%",
+    padding: "10px 16px",
+    backgroundColor: "var(--brand-primary)",
+    color: "var(--text-light)",
+    border: "none",
+    borderRadius: "8px",
+    fontWeight: "600",
+    cursor: isLoading ? "not-allowed" : "pointer",
+    opacity: isLoading ? 0.7 : 1,
+    transition: "all 0.2s",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }),
+  successBox: {
+    backgroundColor: "rgba(20, 184, 166, 0.1)",
+    color: "#0f766e",
+    padding: "12px",
+    borderRadius: "8px",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    fontSize: "0.9rem",
+    fontWeight: "500",
+  },
+  errorBox: {
+    backgroundColor: "rgba(239, 68, 68, 0.1)",
+    color: "#b91c1c",
+    padding: "10px 12px",
+    borderRadius: "8px",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    fontSize: "0.85rem",
+    marginTop: "12px",
+    fontWeight: "500",
+  },
 };
